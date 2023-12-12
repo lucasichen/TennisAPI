@@ -34,6 +34,7 @@ const db = admin.firestore();
 app.get('/api/schedule/:type', async (req, res) => {
   // log api request
   const type = req.params.type;
+  const getRaw = req.query.raw;
   console.log(`GET /api/schedule/${type}`);
   try {
     const collectionRef = db.collection('schedule');
@@ -41,6 +42,11 @@ app.get('/api/schedule/:type', async (req, res) => {
     // Fetch 'schedule' document
     const scheduleDoc = await collectionRef.doc(type.trim().toLowerCase()).get();
     const schedule = scheduleDoc.exists ? scheduleDoc.data() : null;
+
+    if (getRaw) {
+      res.status(200).json(schedule);
+      return;
+    }
 
     // Fetch 'users' document
     const usersDoc = await collectionRef.doc('users').get();
