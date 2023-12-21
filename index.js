@@ -167,6 +167,21 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+app.get('/api/court/configuration/:type', async (req, res) => {
+  const type = req.params.type;
+  console.log(`GET /api/court/configuration/${type}`); // log api request
+  try {
+    const courtConfigDoc = await db.collection('schedule').doc(`${type}CourtConfiguration`).get();
+    const courtConfig = courtConfigDoc.exists ? courtConfigDoc.data() : null;
+    
+    res.status(200).json(courtConfig);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 // Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
