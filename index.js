@@ -167,20 +167,57 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-app.get('/api/court/configuration/:type', async (req, res) => {
+// get tennis or pickleball configurations
+app.get('/api/configurations/:type', async (req, res) => {
   const type = req.params.type;
-  console.log(`GET /api/court/configuration/${type}`); // log api request
+  console.log(`GET /api/configurations/${type}`); // log api request
   try {
-    const courtConfigDoc = await db.collection('schedule').doc(`${type}CourtConfiguration`).get();
-    const courtConfig = courtConfigDoc.exists ? courtConfigDoc.data() : null;
+    const doc = await db.collection('configurations').doc(`${type}`).get();
+    const config = doc.exists ? doc.data() : null;
     
-    res.status(200).json(courtConfig);
+    res.status(200).json(config);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
+
+// app.post('/api/configurations', async (req, res) => {
+//   const docRef = db.collection('configurations').doc('pickleball');
+//   const tennisData = {
+//     'surface-reserve': {
+//       "1": '4',
+//       "2": '5',
+//       "3": '6',
+//       "4": '7',
+//       "5": '8',
+//       "6": '9',
+//       "9": '17',
+//       "11": '10',
+//       "12": '11',
+//       "13": '13',
+//       "14": '14',
+//       "15": '16',
+//       "16": '15',
+//       "17": '18',
+//     },
+//     'component': '2',
+//     'location-reserve': '1',
+//   };
+//   const pickleballData = {
+//     'surface-reserve': {
+//       "1": '4',
+//       "2": '5',
+//       "3": '6',
+//       "4": '7',
+//     },
+//     'component': '42',
+//     'location-reserve': '43',
+//   };
+//   docRef.set(pickleballData);
+//   res.status(500).json({ error: 'Stopped' });
+// });
 
 // Start the server
 const port = process.env.PORT || 3000;
