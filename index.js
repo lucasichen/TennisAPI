@@ -182,42 +182,15 @@ app.get('/api/configurations/:type', async (req, res) => {
   }
 });
 
-
-// app.post('/api/configurations', async (req, res) => {
-//   const docRef = db.collection('configurations').doc('pickleball');
-//   const tennisData = {
-//     'surface-reserve': {
-//       "1": '4',
-//       "2": '5',
-//       "3": '6',
-//       "4": '7',
-//       "5": '8',
-//       "6": '9',
-//       "9": '17',
-//       "11": '10',
-//       "12": '11',
-//       "13": '13',
-//       "14": '14',
-//       "15": '16',
-//       "16": '15',
-//       "17": '18',
-//     },
-//     'component': '2',
-//     'location-reserve': '1',
-//   };
-//   const pickleballData = {
-//     'surface-reserve': {
-//       "1": '4',
-//       "2": '5',
-//       "3": '6',
-//       "4": '7',
-//     },
-//     'component': '42',
-//     'location-reserve': '43',
-//   };
-//   docRef.set(pickleballData);
-//   res.status(500).json({ error: 'Stopped' });
-// });
+// Add to database
+/*
+app.post('/api/configurations', async (req, res) => {
+  const docRef = db.collection('collectionName').doc('documentName');
+  const data = {};
+  docRef.set(data);
+  res.status(500).json({ error: 'Completed POST req' });
+});
+*/
 
 // Start the server
 const port = process.env.PORT || 3000;
