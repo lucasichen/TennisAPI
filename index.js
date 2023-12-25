@@ -167,6 +167,31 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+// get tennis or pickleball configurations
+app.get('/api/configurations/:type', async (req, res) => {
+  const type = req.params.type;
+  console.log(`GET /api/configurations/${type}`); // log api request
+  try {
+    const doc = await db.collection('configurations').doc(`${type}`).get();
+    const config = doc.exists ? doc.data() : null;
+    
+    res.status(200).json(config);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Add to database
+/*
+app.post('/api/configurations', async (req, res) => {
+  const docRef = db.collection('collectionName').doc('documentName');
+  const data = {};
+  docRef.set(data);
+  res.status(500).json({ error: 'Completed POST req' });
+});
+*/
+
 // Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
