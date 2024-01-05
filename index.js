@@ -1,11 +1,12 @@
 const express = require('express');
+const authMiddleware = require('./middleware/auth0'); // Adjust the path
 const app = express();
 app.use(express.json());
 require('dotenv').config();
 // cors is needed to allow cross-origin requests
 const cors = require('cors');
 app.use(cors());
-
+app.use(authMiddleware.jwtCheck);
 
 // Set up Firebase Admin SDK
 const admin = require('firebase-admin');
@@ -174,7 +175,7 @@ app.get('/api/configurations/:type', async (req, res) => {
   try {
     const doc = await db.collection('configurations').doc(`${type}`).get();
     const config = doc.exists ? doc.data() : null;
-    
+
     res.status(200).json(config);
   } catch (error) {
     console.error(error);
