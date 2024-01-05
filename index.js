@@ -30,6 +30,8 @@ admin.initializeApp({
 // Set up Firestore
 const db = admin.firestore();
 
+const DEFAULT_DURATION = 90;
+
 // Example route to fetch data from Firestore
 app.get('/api/schedule/:type', async (req, res) => {
   // log api request
@@ -61,7 +63,8 @@ app.get('/api/schedule/:type', async (req, res) => {
         if (userData) {
           mappedSchedule[day][userData.name] = {
             time: schedule[day][userId].time,
-            court: schedule[day][userId].court
+            court: schedule[day][userId].court,
+            duration: schedule[day][userId]?.duration || DEFAULT_DURATION
           };
         }
       });
@@ -78,7 +81,7 @@ app.get('/api/schedule/:type', async (req, res) => {
 app.post('/api/schedule/:type', async (req, res) => {
   const type = req.params.type;
 
-  const { day, user, time, court } = req.body;
+  const { day, user, time, court, duration } = req.body;
 
   if (!day || !user || !time || !court) {
     res.status(400).json({ error: 'Invalid request' });
@@ -100,7 +103,7 @@ app.post('/api/schedule/:type', async (req, res) => {
     }
 
     // Update the user's schedule data
-    scheduleData[dayLowerFirst][user] = { time, court };
+    scheduleData[dayLowerFirst][user] = { time, court, duration };
 
     // Set the updated data in Firestore
     await docRef.set(scheduleData);
@@ -174,7 +177,7 @@ app.get('/api/configurations/:type', async (req, res) => {
   try {
     const doc = await db.collection('configurations').doc(`${type}`).get();
     const config = doc.exists ? doc.data() : null;
-    
+
     res.status(200).json(config);
   } catch (error) {
     console.error(error);
